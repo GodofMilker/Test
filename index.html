@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>Page Title</title>
+    <script>
+        var codes = ["Test.java", "Test.java"];
+
+
+        function loadPage() {
+            var list = document.getElementById("list");
+            for (let index = 0; index < codes.length; index++) {
+                const element = codes[index];
+                list.innerHTML += '<div>' +
+                    '<h2>' + element + '</h2>' +
+                    '<object width="80%" height="300" type="text/plain" data="' + element + '" border="1px">' +
+                    '</object>' +
+                    '</div>';
+            }
+        }
+    </script>
+</head>
+
+<body onload="loadPage()">
+    <div id="list">
+    </div>
+</body>
+
+</html>
