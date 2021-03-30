@@ -5,16 +5,22 @@
     <meta charset='utf-8'>
     <title>Page Title</title>
     <script>
-        var codes = ["Test.java", "Test.java"];
+        var codes = ["Test.java", "q1.pdf"];
 
 
         function loadPage() {
             var list = document.getElementById("list");
             for (let index = 0; index < codes.length; index++) {
                 const element = codes[index];
+                var textType = "text/plain";
+                var height = 400;
+                if (element.endsWith(".pdf")) {
+                    textType = "application/pdf"
+                    height = 1000;
+                }
                 list.innerHTML += '<div>' +
                     '<h2>' + element + '</h2>' +
-                    '<object width="80%" height="300" type="text/plain" data="' + element + '" border="1px">' +
+                    '<object width="80%" height="' + height + '" type="' + textType + '" data="' + element + '" border="1px">' +
                     '</object>' +
                     '</div>';
             }
@@ -24,6 +30,7 @@
 
 <body onload="loadPage()">
     <div id="list">
+
     </div>
 </body>
 
