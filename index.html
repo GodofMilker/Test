@@ -5,24 +5,72 @@
     <meta charset='utf-8'>
     <title>Page Title</title>
     <script>
-        var codes = ["slm", "q1.pdf", "Test2.java"];
+        function hideValue(element) {
+            var curDisp = element.parentNode.getElementsByClassName('value')[0].style.display == "block";
 
+            element.parentNode.getElementsByClassName('value')[0].style.display = curDisp ? "none" : "block";
+        }
+
+        var files = {
+            "/slm": {
+                "/a": {
+                    "files": ["Test3.java"]
+                },
+                "files": ["Test.java"]
+            },
+            "files": ["q1.pdf",
+                "Test2.java"
+            ]
+        };
 
         function loadPage() {
             var list = document.getElementById("list");
-            for (let index = 0; index < codes.length; index++) {
-                const element = codes[index];
-                var textType = "text/plain";
-                var height = 400;
-                if (element.endsWith(".pdf")) {
-                    textType = "application/pdf"
-                    height = 1000;
+            for (const folder in files) {
+                if (folder == "files") {
+                    files[folder].forEach(element => {
+                        list.innerHTML += elementDOM(element, './' + element);
+                    });
+                } else if (folder.startsWith("/")) {
+                    list.innerHTML += folderDOM(folder);
+                    var folderElement = list.getElementsByClassName(folder)[0].getElementsByClassName("list")[0];
+                    loadFolder(folderElement, folder, files[folder], ".")
                 }
-                list.innerHTML += '<div>' +
-                    '<h2>' + element + '</h2>' +
-                    '<object width="80%" height="' + height + '" data="' + element + '" border="1px">' +
-                    '</object>' +
-                    '</div>';
+            }
+        }
+
+        function folderDOM(folderName) {
+            return '<div class="' + folderName + '">' +
+                '<h2>' + folderName + '</h2>' +
+                '<button style="margin-bottom:1em;" onclick="hideValue(this)">Show</button>' +
+                '<div class="list value" style="border: 1px solid; padding-left: 1em;" hidden>' +
+                '</object>' +
+                '</div>';
+        }
+
+        function elementDOM(elementName, src) {
+            height = 500;
+            if (elementName.endsWith(".pdf"))
+                height = 1000;
+            return '<div>' +
+                '<h2>' + elementName + '</h2>' +
+                '<button style="margin-bottom:1em;" onclick="hideValue(this)">Show</button>' +
+                '<object class="value" width="80%" height="' + height + '" data="' + src + '" border="1px" hidden>' +
+                '</object>' +
+                '</div>';
+        }
+
+        function loadFolder(folderElement, folderName, folderObj, root) {
+            var newRoot = root + folderName;
+            for (const folder in folderObj) {
+                if (folder == "files") {
+                    folderObj[folder].forEach(element => {
+                        folderElement.innerHTML += elementDOM(element, newRoot + '/' + element);
+                    });
+                } else if (folder.startsWith("/")) {
+                    folderElement.innerHTML += folderDOM(folder);
+                    var innerFolderElement = folderElement.getElementsByClassName(folder)[0].getElementsByClassName("list")[0];
+                    loadFolder(innerFolderElement, folder, folderObj[folder], newRoot)
+                }
             }
         }
     </script>
@@ -30,7 +78,6 @@
 
 <body onload="loadPage()">
     <div id="list">
-
     </div>
 </body>
 
